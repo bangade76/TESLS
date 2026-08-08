@@ -1,132 +1,136 @@
 /* =========================================
-   1. PENGATURAN TATA LETAK UTAMA (LAYOUT)
+   TEMA GELAP ELEVASI (SESUAI GAMBAR REFERENSI)
    ========================================= */
-html,
-body {
-    height: 100%;
-    width: 100%;
-    padding: 0px;
-    margin: 0px;
+
+/* 1. Bingkai Utama (Card) */
+.elevation-dark-card {
+    background-color: #0b111e; /* Warna Navy Gelap */
+    border-radius: 16px;
+    padding: 25px 30px;
+    margin: 20px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-body {
     display: flex;
     flex-direction: column;
-    background-color: #ffffff;
-}
-
-/* Membagi layar: 60% untuk Peta, 40% untuk Grafik Elevasi */
-.leaflet-map {
-    width: 100%;
-    height: 60vh; 
-    padding: 0px;
-    margin: 0px;
-    border-bottom: 2px solid #e1e4e8; 
-}
-
-/* Wadah Grafik & Statistik Elevasi di Bawah Peta */
-.elevation-summary {
-    margin: 0px;
-    flex-grow: 1; 
-    padding: 15px 20px 0px 20px;
-    background-color: #f6f8fa; 
     box-sizing: border-box;
-    overflow-y: hidden; /* Mencegah scroll ganda jika grafik sudah pas */
+}
+
+/* 2. Bagian Header (Judul dan Stats) */
+.elevation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+/* Tipografi Judul */
+.header-title h2 {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 900;
+    font-style: italic;
+    margin: 0 0 5px 0;
+    letter-spacing: 0.5px;
+}
+
+.header-title p {
+    color: #4b5563;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 1.5px;
+}
+
+/* 3. Kotak Live Stats (Progress & Altitude) */
+.header-live-stats {
+    background-color: #080c16; /* Latar kotak lebih gelap */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 10px 25px;
+}
+
+.stat-item {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
-/* Menyembunyikan teks atribusi bawaan peta */
-.leaflet-control-attribution {
-    display: none;
+.stat-label {
+    color: #6b7280;
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
-
-/* =========================================
-   2. MEMPERCANTIK KOTAK STATISTIK (SUMMARY)
-   ========================================= */
-/* Membuat tata letak statistik menjadi mendatar dan rapi di tengah */
-.elevation-summary .leaflet-control-elevation-summary {
-    display: flex !important;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 10px;
-}
-
-/* Mengubah teks biasa menjadi kotak (badge) informasi modern */
-.elevation-summary .totlen,
-.elevation-summary .maxele,
-.elevation-summary .minele,
-.elevation-summary .ascent,
-.elevation-summary .descent {
-    background-color: #ffffff;
-    border: 1px solid #d0d7de;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 12px;
-    color: #57606a;
-    font-weight: 500;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: baseline;
-}
-
-/* Menonjolkan warna dan ukuran angkanya saja */
-.elevation-summary .summaryvalue {
-    font-size: 15px;
+.stat-value {
+    font-size: 18px;
     font-weight: 700;
-    color: #2da44e; /* Warna hijau khas olahraga/trail */
-    margin-left: 6px;
+    font-family: 'Courier New', Courier, monospace; /* Tipe font angka kotak */
 }
 
+.stat-value small {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Pewarnaan Teks Stats */
+.text-green { color: #00e676; }
+.text-green small { color: #00e676; }
+.text-white { color: #ffffff; }
+
+/* Garis pemisah tengah di kotak stats */
+.stat-divider {
+    height: 30px;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 0 25px;
+}
 
 /* =========================================
-   3. MEMPERCANTIK GRAFIK ELEVASI (CHART D3)
+   4. OVERRIDE GRAFIK D3 (LEAFLET ELEVATION)
    ========================================= */
-/* Memastikan wadah grafik memanjang penuh */
-.leaflet-control-elevation {
+
+.elevation-chart-area {
+    width: 100%;
+}
+
+.elevation-chart-area .leaflet-control-elevation {
+    background: transparent !important;
     width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
 }
 
-/* Warna isian grafik (lembah) - Hijau transparan */
-.leaflet-control-elevation .area {
-    fill: rgba(45, 164, 78, 0.25) !important; 
-    stroke: none !important;
-}
-
-/* Garis puncak gunung grafik - Hijau tegas */
-.leaflet-control-elevation .line {
-    stroke: #2da44e !important; 
+/* Garis Puncak Grafik (Biru Terang) */
+.elevation-chart-area .line {
+    stroke: #3b82f6 !important; 
     stroke-width: 2.5px !important; 
 }
 
-/* Garis vertikal putus-putus saat kursor digeser di atas grafik */
-.leaflet-control-elevation .mouse-focus-line {
-    stroke: #cf222e !important; /* Warna merah agar kontras */
-    stroke-width: 1.5px !important;
-    stroke-dasharray: 4, 4; 
+/* Area Isi Lembah Grafik (Biru Solid Transparan) */
+.elevation-chart-area .area {
+    fill: rgba(59, 130, 246, 0.15) !important; 
+    stroke: none !important;
 }
 
-/* Warna garis latar (grid) dan teks panduan (Sumbu X & Y) */
-.leaflet-control-elevation .axis path,
-.leaflet-control-elevation .axis line,
-.leaflet-control-elevation .grid .tick line {
-    stroke: #d0d7de !important; 
-    opacity: 0.7;
+/* Garis Sumbu & Teks Ketinggian Kiri */
+.elevation-chart-area .axis text {
+    fill: #6b7280 !important; /* Warna Abu-abu */
+    font-size: 12px !important;
 }
 
-.leaflet-control-elevation .axis text {
-    fill: #57606a !important; 
-    font-size: 10px !important;
-    font-family: inherit;
+.elevation-chart-area .axis path,
+.elevation-chart-area .axis line,
+.elevation-chart-area .grid .tick line {
+    stroke: transparent !important; /* Menghilangkan garis panduan kotak-kotak (grid) */
 }
 
-/* Teks Tooltip saat grafik disorot */
-.leaflet-control-elevation .focus text {
-    fill: #24292f !important;
-    font-weight: 600 !important;
+/* Garis Kursor Indikator (Crosshair Putih) */
+.elevation-chart-area .mouse-focus-line {
+    stroke: #ffffff !important;
+    stroke-width: 2px !important;
+}
+
+/* Tooltip Teks saat digeser */
+.elevation-chart-area .focus text {
+    fill: #ffffff !important;
 }
