@@ -40,3 +40,44 @@ body {
 .leaflet-control-attribution {
     display: none;
 }
+/* --- TAMBAHAN UNTUK MEMPERCANTIK STATISTIK ELEVASI (SUMMARY) --- */
+
+/* Mempercantik teks statistik jarak, elevasi, dll */
+.elevation-summary .leaflet-control-elevation-summary {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Membuat tiap elemen data (contoh: "Total Length: 25 km") berbentuk seperti kotak lencana (badge) */
+.elevation-summary .totlen,
+.elevation-summary .maxele,
+.elevation-summary .minele,
+.elevation-summary .ascent,
+.elevation-summary .descent {
+    background-color: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #24292f;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+/* Menonjolkan nilai angkanya (membesarkan dan menebalkan angka di dalam ringkasan) */
+.elevation-summary .summaryvalue {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0969da; /* Warna biru khas link/highlight GitHub */
+    margin-left: 5px;
+}
+
+/* Mengatur tooltip pada grafik (kotak hitam saat kursor di-hover) */
+.elevation-summary .leaflet-control-elevation-tooltip {
+    font-family: inherit;
+    font-size: 12px;
+}
