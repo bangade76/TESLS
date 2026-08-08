@@ -1,44 +1,42 @@
-/* Pengaturan Dasar & Layout Container */
+/* 1. Pengaturan dasar untuk layar penuh */
 html,
 body {
     height: 100%;
-    width: 100%;[cite: 1]
-    padding: 0px;[cite: 1]
-    margin: 0px;[cite: 1]
-    display: flex;[cite: 1]
-    flex-direction: column;[cite: 1]
-    /* Menggunakan sistem font default yang bersih ala GitHub */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
     background-color: #ffffff;
 }
 
-/* Area Peta Utama */
+/* 2. Pengaturan wadah peta */
 .leaflet-map {
-    /* 
-       Tinggi diubah dari 100%[cite: 1] menjadi 65vh (65% dari tinggi layar).
-       Ini menyisakan 35% ruang di bawahnya untuk grafik elevasi.
-    */
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    /* Memberikan 65% dari tinggi layar untuk peta */
     height: 65vh; 
-    width: 100%;[cite: 1]
-    padding: 0px;[cite: 1]
-    margin: 0px;[cite: 1]
-    /* Menambahkan garis batas bawah berwarna abu-abu khas batas elemen GitHub */
+    /* Garis pemisah antara peta dan grafik */
     border-bottom: 1px solid #d0d7de; 
 }
 
-/* Area Ringkasan/Grafik Elevasi */
+/* 3. Pengaturan wadah grafik elevasi */
 .elevation-summary {
-    margin: 0px;[cite: 1]
-    /* flex-grow: 1 memastikan kontainer ini otomatis mengisi semua sisa ruang di bawah peta */
+    margin: 0px;
+    /* flex-grow: 1 akan otomatis mengisi sisa 35% tinggi layar di bawah peta */
     flex-grow: 1; 
-    padding: 20px;
-    /* Latar belakang abu-abu terang agar kontras dengan peta (gaya UI GitHub) */
-    background-color: #f6f8fa; 
+    padding: 15px 20px;
+    background-color: #f6f8fa; /* Memberikan warna abu-abu terang ala GitHub/website modern */
     box-sizing: border-box;
     overflow-y: auto;
 }
 
-/* Menyembunyikan Atribusi Bawaan Peta */
+/* 4. Sembunyikan atribusi bawaan */
 .leaflet-control-attribution {
-    display: none;[cite: 1]
+    display: none;
 }
