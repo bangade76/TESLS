@@ -26,7 +26,11 @@
 
 <body>
 
+  <!-- Container Peta -->
   <div id="map" class="leaflet-map"></div>
+  
+  <!-- Container Grafik Elevasi -->
+  <div id="elevation" class="elevation-summary"></div>
 
   <script>
     let opts = {
@@ -51,14 +55,14 @@
       elevationControl: {
         url: "LS2027/25K_LS.gpx",  // GPX lokal
         options: {
+          elevationDiv: "#elevation", // Menghubungkan grafik ke div bawah peta
           theme: "lightblue-theme",
-          width: 100,
-          height: 150,
+          height: 200, // Menyesuaikan tinggi grafik agar proporsional
           collapsed: false,
           autohide: false,
           autofitBounds: true,
           position: "bottomleft",
-          detached: true,
+          detached: true, // Memastikan grafik terlepas dari overlay peta
           summary: false,
           imperial: false,
           downloadLink: false,
