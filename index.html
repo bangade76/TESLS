@@ -47,25 +47,25 @@
         resizerControl: false,
         gestureHandling: false,
         preferCanvas: true,
-        mapTypeId: 'satellite',
+        mapTypeId: 'topo',
         rotate: false,
         zoomControl: {
           position: 'topleft',
         },
       },
-      elevationControl: {
-        url: "LS2027/25K_LS.gpx",  // GPX lokal
+elevationControl: {
+        url: "LS2027/25K_LS.gpx",  
         options: {
-          elevationDiv: "#elevation", // <-- Targetkan grafik ke div di bawah peta
-          theme: "lightblue-theme",
-          height: 200,                // <-- Tinggi disesuaikan, width dihapus agar otomatis responsif (lebar 100%)
+          elevationDiv: "#elevation", 
+          theme: "lime-theme",        // <-- UBAH: Tema warna hijau ala outdoor/olahraga
+          height: 200,                
           collapsed: false,
           autohide: false,
           autofitBounds: true,
           position: "bottomleft",
           detached: true,
-          summary: 'inline',          // <-- Diubah menjadi 'inline' agar menampilkan ringkasan jarak/elevasi seperti web referensi
-          imperial: false,
+          summary: 'inline',          // <-- PASTIKAN INI inline: Untuk memunculkan teks statistik
+          imperial: false,            // Gunakan metrik (Kilometer/Meter)
           downloadLink: false,
           slope: "disabled",
           speed: false,
@@ -74,8 +74,8 @@
           legend: true,
           followMarker: true,
           almostOver: true,
-          distanceMarkers: false,
-          hotline: false,
+          distanceMarkers: true,      // <-- UBAH: Aktifkan penanda jarak (1km, 2km, dst) di rute peta
+          hotline: true,              // <-- UBAH: Aktifkan hotline agar warna jalur berubah mengikuti elevasi
         },
       },
       layersControl: {
