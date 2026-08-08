@@ -81,3 +81,43 @@ body {
     font-family: inherit;
     font-size: 12px;
 }
+/* --- KUSTOMISASI TAMPILAN GRAFIK ELEVASI (AREA & GARIS) --- */
+
+/* 1. Warna Isian Grafik (Lembah di bawah garis) */
+.leaflet-control-elevation .area {
+    fill: rgba(43, 144, 143, 0.35) !important; /* Warna hijau kebiruan transparan */
+    stroke: none !important;
+}
+
+/* 2. Warna Garis Rute (Batas atas grafik) */
+.leaflet-control-elevation .line {
+    stroke: #1b6867 !important; /* Hijau kebiruan gelap (solid) */
+    stroke-width: 2.5px !important; 
+}
+
+/* 3. Garis Interaktif (Garis vertikal yang muncul saat disorot kursor/mouse) */
+.leaflet-control-elevation .mouse-focus-line {
+    stroke: #ff4500 !important; /* Garis sorot warna oranye kemerahan (khas outdoor) */
+    stroke-width: 1.5px !important;
+    stroke-dasharray: 4, 4; /* Membuat garisnya putus-putus */
+}
+
+/* 4. Warna Teks dan Garis Grid (Sumbu X dan Y) */
+.leaflet-control-elevation .axis path,
+.leaflet-control-elevation .axis line,
+.leaflet-control-elevation .grid .tick line {
+    stroke: #d0d7de !important; /* Warna abu-abu halus ala GitHub untuk garis panduan */
+    opacity: 0.6;
+}
+
+.leaflet-control-elevation .axis text {
+    fill: #57606a !important; /* Warna abu-abu teks standar ala GitHub */
+    font-size: 11px !important;
+    font-family: inherit;
+}
+
+/* 5. Kotak Info (Tooltip) yang muncul saat grafik disorot */
+.leaflet-control-elevation .focus text {
+    fill: #24292f !important;
+    font-weight: 600 !important;
+}
