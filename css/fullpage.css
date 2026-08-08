@@ -1,5 +1,5 @@
 /* =========================================
-   TEMA GELAP ELEVASI (SESUAI GAMBAR REFERENSI)
+   TEMA GELAP ELEVASI (SUKAWANA TRAIL RUN STYLE)
    ========================================= */
 
 /* 1. Bingkai Utama (Card) */
@@ -7,19 +7,22 @@
     background-color: #0b111e; /* Warna Navy Gelap */
     border-radius: 16px;
     padding: 25px 30px;
-    margin: 20px;
+    margin: 20px 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Efek melayang elegan */
 }
 
 /* 2. Bagian Header (Judul dan Stats) */
 .elevation-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center; /* Diubah ke center agar presisi */
     margin-bottom: 30px;
+    flex-wrap: wrap; /* Agar responsif di HP */
+    gap: 15px;
 }
 
 /* Tipografi Judul */
@@ -30,19 +33,21 @@
     font-style: italic;
     margin: 0 0 5px 0;
     letter-spacing: 0.5px;
+    text-transform: uppercase; /* Sesuai standar web trail */
 }
 
 .header-title p {
-    color: #4b5563;
+    color: #9ca3af; /* Sedikit diterangkan dari sebelumnya agar mudah dibaca */
     font-size: 11px;
     font-weight: 600;
     margin: 0;
     letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
 /* 3. Kotak Live Stats (Progress & Altitude) */
 .header-live-stats {
-    background-color: #080c16; /* Latar kotak lebih gelap */
+    background-color: #111827;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     display: flex;
@@ -58,32 +63,34 @@
 
 .stat-label {
     color: #6b7280;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     margin-bottom: 4px;
+    text-transform: uppercase;
 }
 
 .stat-value {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
-    font-family: 'Courier New', Courier, monospace; /* Tipe font angka kotak */
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .stat-value small {
     font-size: 12px;
     font-weight: 500;
+    margin-left: 2px;
 }
 
 /* Pewarnaan Teks Stats */
-.text-green { color: #00e676; }
-.text-green small { color: #00e676; }
+.text-green { color: #10b981; } /* Hijau modern */
+.text-green small { color: #10b981; }
 .text-white { color: #ffffff; }
 
 /* Garis pemisah tengah di kotak stats */
 .stat-divider {
-    height: 30px;
+    height: 35px;
     width: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
     margin: 0 25px;
 }
 
@@ -93,44 +100,55 @@
 
 .elevation-chart-area {
     width: 100%;
+    position: relative;
 }
 
 .elevation-chart-area .leaflet-control-elevation {
     background: transparent !important;
     width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 /* Garis Puncak Grafik (Biru Terang) */
+.elevation-chart-area .elevation-polyline,
 .elevation-chart-area .line {
     stroke: #3b82f6 !important; 
     stroke-width: 2.5px !important; 
 }
 
 /* Area Isi Lembah Grafik (Biru Solid Transparan) */
+.elevation-chart-area .elevation-area,
 .elevation-chart-area .area {
-    fill: rgba(59, 130, 246, 0.15) !important; 
+    fill: rgba(59, 130, 246, 0.18) !important; 
     stroke: none !important;
 }
 
 /* Garis Sumbu & Teks Ketinggian Kiri */
 .elevation-chart-area .axis text {
-    fill: #6b7280 !important; /* Warna Abu-abu */
-    font-size: 12px !important;
+    fill: #9ca3af !important; 
+    font-size: 11px !important;
+    font-family: inherit !important;
 }
 
+/* Garis panduan kotak-kotak (grid) */
 .elevation-chart-area .axis path,
 .elevation-chart-area .axis line,
-.elevation-chart-area .grid .tick line {
-    stroke: transparent !important; /* Menghilangkan garis panduan kotak-kotak (grid) */
+.elevation-chart-area .grid .tick line,
+.elevation-chart-area .elevation-grid line {
+    stroke: rgba(255, 255, 255, 0.05) !important; /* Dibuat sangat pudar agar grafik terlihat bersih namun ukurannya tetap terbaca */
 }
 
-/* Garis Kursor Indikator (Crosshair Putih) */
+/* Garis Kursor Indikator (Crosshair Vertikal saat mouse digeser) */
 .elevation-chart-area .mouse-focus-line {
     stroke: #ffffff !important;
-    stroke-width: 2px !important;
+    stroke-width: 1.5px !important;
+    stroke-dasharray: 4, 4; /* Garisnya dibuat putus-putus ala radar modern */
 }
 
 /* Tooltip Teks saat digeser */
-.elevation-chart-area .focus text {
+.elevation-chart-area .focus text,
+.elevation-chart-area .mouse-focus-label-text {
     fill: #ffffff !important;
+    font-weight: 600 !important;
 }
