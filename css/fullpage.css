@@ -1,4 +1,6 @@
-/* 1. Pengaturan dasar untuk layar penuh */
+/* =========================================
+   1. PENGATURAN TATA LETAK UTAMA (LAYOUT)
+   ========================================= */
 html,
 body {
     height: 100%;
@@ -14,45 +16,46 @@ body {
     background-color: #ffffff;
 }
 
-/* 2. Pengaturan wadah peta */
+/* Membagi layar: 60% untuk Peta, 40% untuk Grafik Elevasi */
 .leaflet-map {
     width: 100%;
+    height: 60vh; 
     padding: 0px;
     margin: 0px;
-    /* Memberikan 65% dari tinggi layar untuk peta */
-    height: 65vh; 
-    /* Garis pemisah antara peta dan grafik */
-    border-bottom: 1px solid #d0d7de; 
+    border-bottom: 2px solid #e1e4e8; 
 }
 
-/* 3. Pengaturan wadah grafik elevasi */
+/* Wadah Grafik & Statistik Elevasi di Bawah Peta */
 .elevation-summary {
     margin: 0px;
-    /* flex-grow: 1 akan otomatis mengisi sisa 35% tinggi layar di bawah peta */
     flex-grow: 1; 
-    padding: 15px 20px;
-    background-color: #f6f8fa; /* Memberikan warna abu-abu terang ala GitHub/website modern */
+    padding: 15px 20px 0px 20px;
+    background-color: #f6f8fa; 
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow-y: hidden; /* Mencegah scroll ganda jika grafik sudah pas */
+    display: flex;
+    flex-direction: column;
 }
 
-/* 4. Sembunyikan atribusi bawaan */
+/* Menyembunyikan teks atribusi bawaan peta */
 .leaflet-control-attribution {
     display: none;
 }
-/* --- TAMBAHAN UNTUK MEMPERCANTIK STATISTIK ELEVASI (SUMMARY) --- */
 
-/* Mempercantik teks statistik jarak, elevasi, dll */
+
+/* =========================================
+   2. MEMPERCANTIK KOTAK STATISTIK (SUMMARY)
+   ========================================= */
+/* Membuat tata letak statistik menjadi mendatar dan rapi di tengah */
 .elevation-summary .leaflet-control-elevation-summary {
-    display: flex;
+    display: flex !important;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    gap: 12px;
+    margin-bottom: 10px;
 }
 
-/* Membuat tiap elemen data (contoh: "Total Length: 25 km") berbentuk seperti kotak lencana (badge) */
+/* Mengubah teks biasa menjadi kotak (badge) informasi modern */
 .elevation-summary .totlen,
 .elevation-summary .maxele,
 .elevation-summary .minele,
@@ -61,62 +64,68 @@ body {
     background-color: #ffffff;
     border: 1px solid #d0d7de;
     border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 13px;
-    color: #24292f;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #57606a;
     font-weight: 500;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: baseline;
 }
 
-/* Menonjolkan nilai angkanya (membesarkan dan menebalkan angka di dalam ringkasan) */
+/* Menonjolkan warna dan ukuran angkanya saja */
 .elevation-summary .summaryvalue {
     font-size: 15px;
     font-weight: 700;
-    color: #0969da; /* Warna biru khas link/highlight GitHub */
-    margin-left: 5px;
+    color: #2da44e; /* Warna hijau khas olahraga/trail */
+    margin-left: 6px;
 }
 
-/* Mengatur tooltip pada grafik (kotak hitam saat kursor di-hover) */
-.elevation-summary .leaflet-control-elevation-tooltip {
-    font-family: inherit;
-    font-size: 12px;
-}
-/* --- KUSTOMISASI TAMPILAN GRAFIK ELEVASI (AREA & GARIS) --- */
 
-/* 1. Warna Isian Grafik (Lembah di bawah garis) */
+/* =========================================
+   3. MEMPERCANTIK GRAFIK ELEVASI (CHART D3)
+   ========================================= */
+/* Memastikan wadah grafik memanjang penuh */
+.leaflet-control-elevation {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Warna isian grafik (lembah) - Hijau transparan */
 .leaflet-control-elevation .area {
-    fill: rgba(43, 144, 143, 0.35) !important; /* Warna hijau kebiruan transparan */
+    fill: rgba(45, 164, 78, 0.25) !important; 
     stroke: none !important;
 }
 
-/* 2. Warna Garis Rute (Batas atas grafik) */
+/* Garis puncak gunung grafik - Hijau tegas */
 .leaflet-control-elevation .line {
-    stroke: #1b6867 !important; /* Hijau kebiruan gelap (solid) */
+    stroke: #2da44e !important; 
     stroke-width: 2.5px !important; 
 }
 
-/* 3. Garis Interaktif (Garis vertikal yang muncul saat disorot kursor/mouse) */
+/* Garis vertikal putus-putus saat kursor digeser di atas grafik */
 .leaflet-control-elevation .mouse-focus-line {
-    stroke: #ff4500 !important; /* Garis sorot warna oranye kemerahan (khas outdoor) */
+    stroke: #cf222e !important; /* Warna merah agar kontras */
     stroke-width: 1.5px !important;
-    stroke-dasharray: 4, 4; /* Membuat garisnya putus-putus */
+    stroke-dasharray: 4, 4; 
 }
 
-/* 4. Warna Teks dan Garis Grid (Sumbu X dan Y) */
+/* Warna garis latar (grid) dan teks panduan (Sumbu X & Y) */
 .leaflet-control-elevation .axis path,
 .leaflet-control-elevation .axis line,
 .leaflet-control-elevation .grid .tick line {
-    stroke: #d0d7de !important; /* Warna abu-abu halus ala GitHub untuk garis panduan */
-    opacity: 0.6;
+    stroke: #d0d7de !important; 
+    opacity: 0.7;
 }
 
 .leaflet-control-elevation .axis text {
-    fill: #57606a !important; /* Warna abu-abu teks standar ala GitHub */
-    font-size: 11px !important;
+    fill: #57606a !important; 
+    font-size: 10px !important;
     font-family: inherit;
 }
 
-/* 5. Kotak Info (Tooltip) yang muncul saat grafik disorot */
+/* Teks Tooltip saat grafik disorot */
 .leaflet-control-elevation .focus text {
     fill: #24292f !important;
     font-weight: 600 !important;
