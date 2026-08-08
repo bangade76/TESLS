@@ -1,138 +1,335 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
-  <title>LINTASENTUL 5K</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
-  <link rel="dns-prefetch preconnect" href="https://unpkg.com" />
-  <link rel="preload" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" as="script">
-  <link rel="preload" href="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js" as="script">
+	<title>Lintas Sentul 5K Category</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width" />
+	<link rel="dns-prefetch" href="https://tile.openstreetmap.org">
+	<link rel="dns-prefetch preconnect" href="https://unpkg.com" />
+	<link rel="preload" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" as="script">
+	<link rel="preload" href="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js" as="script">
 
-  <style>@import 'css/fullpage.css';</style>
+	<!-- Fonts: italic condensed for the elevation-panel headline, Inter for body, mono for data readouts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- leaflet-ui -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js"></script>
+	<style>@import 'css/fullpage.css';</style>
 
-  <!-- leaflet-gpx -->
-  <script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
+	<!-- leaflet-ui -->
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+	<script src="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js"></script>
 
-  <!-- leaflet-elevation -->
-  <link rel="stylesheet" href="https://unpkg.com/@raruto/leaflet-elevation@2.5.1/dist/leaflet-elevation.min.css" />
-  <script src="https://unpkg.com/@raruto/leaflet-elevation@2.5.1/dist/leaflet-elevation.min.js"></script>
+	<!-- leaflet-gpx (loads the track + gives us distance / elevation stats natively) -->
+	<script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
 </head>
 
 <body>
 
-  <div id="map" class="leaflet-map"></div>
+	<header class="hero">
+		<svg class="contours" viewBox="0 0 800 140" preserveAspectRatio="none">
+			<path d="M0,110 Q100,40 200,90 T400,70 T600,100 T800,60" fill="none" stroke="#C97B3D" stroke-width="1.5"/>
+			<path d="M0,120 Q100,60 200,105 T400,90 T600,115 T800,80" fill="none" stroke="#F1EDE3" stroke-width="1"/>
+			<path d="M0,130 Q100,80 200,118 T400,105 T600,128 T800,100" fill="none" stroke="#F1EDE3" stroke-width="1"/>
+		</svg>
 
-  <script>
-    let opts = {
-      map: {
-        center: [-7.4541485122895015, 110.43695296633011],
-        zoom: 10,
-        fullscreenControl: true,
-        layersControl: true,
-        minimapControl: false,
-        searchControl: false,
-        locateControl: false,
-        pegmanControl: false,
-        resizerControl: false,
-        gestureHandling: false,
-        preferCanvas: true,
-        mapTypeId: 'satellite',
-        rotate: false,
-        zoomControl: {
-          position: 'topleft',
-        },
-      },
-      elevationControl: {
-        url: "LS2027/5K_LS.gpx",  // GPX lokal
-        options: {
-          theme: "lightblue-theme",
-          width: 100,
-          height: 150,
-          collapsed: false,
-          autohide: false,
-          autofitBounds: true,
-          position: "bottomleft",
-          detached: true,
-          summary: false,
-          imperial: false,
-          downloadLink: false,
-          slope: "disabled",
-          speed: false,
-          acceleration: false,
-          time: false,
-          legend: true,
-          followMarker: true,
-          almostOver: true,
-          distanceMarkers: false,
-          hotline: false,
-        },
-      },
-      layersControl: {
-        options: {
-          collapsed: false,
-        },
-      },
-    };
+		<div class="hero-top">
+			<h1 class="hero-title">LINTAS<span>ENTUL</span> 5K</h1>
+			<div class="hero-sub">RUTE &amp; PROFIL ELEVASI — DATA LANGSUNG DARI GPX</div>
+		</div>
 
-    let map = L.map('map', opts.map);
+		<div class="stats" id="statCards">
+			<div class="stat-card">
+				<div class="stat-label">Jarak</div>
+				<div class="stat-value" id="statDistance">—<span class="unit">km</span></div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-label">Elevation Gain</div>
+				<div class="stat-value" id="statGain">—<span class="unit">m</span></div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-label">Elevasi Maks</div>
+				<div class="stat-value" id="statMax">—<span class="unit">m</span></div>
+			</div>
+			<div class="stat-card">
+				<div class="stat-label">Elevasi Min</div>
+				<div class="stat-value" id="statMin">—<span class="unit">m</span></div>
+			</div>
+		</div>
+	</header>
 
-    let controlElevation = L.control.elevation(opts.elevationControl.options).addTo(map);
-    let controlLayer = L.control.layers(null, null, opts.layersControl.options);
+	<div class="map-wrap">
+		<div id="map" class="leaflet-map"></div>
+	</div>
 
-    controlElevation.on('eledata_loaded', ({layer, name}) => {
-      controlLayer.addTo(map);
-      layer.eachLayer((trkseg) => {
-        if (trkseg.feature.geometry.type != "Point") {
-          controlLayer.addOverlay(trkseg, trkseg.feature?.properties?.name || name);
-        }
-      });
-    });
+	<!-- ---------- custom elevation profile card (matches reference design) ---------- -->
+	<section class="elevation-panel">
+		<div class="ep-head">
+			<div>
+				<h2 class="ep-title">Elevation Profile</h2>
+				<div class="ep-subtitle">Live terrain data</div>
+			</div>
+			<div class="ep-stat-box">
+				<div class="ep-stat">
+					<div class="ep-stat-label">Progress</div>
+					<div class="ep-stat-value ep-progress" id="epProgress">0 km</div>
+				</div>
+				<div class="ep-stat-divider"></div>
+				<div class="ep-stat">
+					<div class="ep-stat-label">Altitude</div>
+					<div class="ep-stat-value" id="epAltitude">0 m</div>
+				</div>
+			</div>
+		</div>
+		<div class="ep-chart" id="epChart">
+			<div class="ep-loading" id="epLoading">Memuat data elevasi…</div>
+		</div>
+	</section>
 
-    controlElevation.load(opts.elevationControl.url);
-  </script>
+	<script>
+		const GPX_URL = "LS2027/5K_LS.gpx"; // GPX lokal
 
-  <script>
-    L.registerLocale('en:18', {
-      "Acceleration": "Acceleration",
-      "Altitude": "Elevation",
-      "Slope": "Slope",
-      "Speed": "Velocity",
-      "Total Length: ": "L: ",
-      "Max Elevation: ": "E Max: ",
-      "Min Elevation: ": "E Min: ",
-      "Avg Elevation: ": "E Avg: ",
-      "Total Time: ": "T: ",
-      "Total Ascent: ": "Asc: ",
-      "Total Descent: ": "Desc: ",
-      "Min Slope: ": "S Min: ",
-      "Max Slope: ": "S Max: ",
-      "Avg Slope: ": "S Avg: ",
-      "Min Speed: ": "V Min: ",
-      "Max Speed: ": "V Max: ",
-      "Avg Speed: ": "V Avg: ",
-      "Min Acceleration: ": "A Min: ",
-      "Max Acceleration: ": "A Max: ",
-      "Avg Acceleration: ": "A Avg: ",
-    });
+		let map = L.map('map', {
+			center: [-6.600823, 106.906468],
+			zoom: 14,
+			fullscreenControl: true,
+			layersControl: true,
+			minimapControl: false,
+			searchControl: false,
+			locateControl: false,
+			pegmanControl: false,
+			resizerControl: false,
+			gestureHandling: false,
+			preferCanvas: true,
+			mapTypeId: 'satellite',
+			rotate: false,
+			zoomControl: { position: 'topleft' },
+		});
 
-    L.locales['en'] = L.extend({
-      "y: ": "",
-      "x: ": "",
-      "t: ": "",
-      "T: ": "",
-      "m: ": "",
-      "v: ": "",
-      "a: ": "",
-    }, L.locales['en']);
+		let routeMarker = null;
+		let trackLatLngs = [];
+		let trackElevationData = [];
+		let epUpdateAt = null;
+		let epResetChart = null;
 
-    L.setLocale('en');
-  </script>
+		function nearestIndexForLatLng(latlng) {
+			let nearestIdx = 0;
+			let nearestDist = Infinity;
+			for (let i = 0; i < trackLatLngs.length; i++) {
+				const d = trackLatLngs[i].distanceTo(latlng);
+				if (d < nearestDist) { nearestDist = d; nearestIdx = i; }
+			}
+			return nearestIdx;
+		}
+
+		function niceTicks(min, max, count) {
+			const range = niceNum(max - min, false);
+			const step = niceNum(range / (count - 1), true);
+			const niceMin = Math.floor(min / step) * step;
+			const niceMax = Math.ceil(max / step) * step;
+			const ticks = [];
+			for (let v = niceMin; v <= niceMax + 1e-9; v += step) ticks.push(Math.round(v));
+			return ticks;
+		}
+		function niceNum(range, round) {
+			const exponent = Math.floor(Math.log10(range));
+			const fraction = range / Math.pow(10, exponent);
+			let niceFraction;
+			if (round) {
+				if (fraction < 1.5) niceFraction = 1;
+				else if (fraction < 3) niceFraction = 2;
+				else if (fraction < 7) niceFraction = 5;
+				else niceFraction = 10;
+			} else {
+				if (fraction <= 1) niceFraction = 1;
+				else if (fraction <= 2) niceFraction = 2;
+				else if (fraction <= 5) niceFraction = 5;
+				else niceFraction = 10;
+			}
+			return niceFraction * Math.pow(10, exponent);
+		}
+		function fmtNum(n) {
+			return n.toLocaleString('id-ID');
+		}
+
+		function buildElevationChart(container, elevationData, latlngs) {
+			// elevationData: array of [distanceKm, elevationM]
+			const eles = elevationData.map(p => p[1]);
+			const minEle = Math.min(...eles);
+			const maxEle = Math.max(...eles);
+			const totalDist = elevationData[elevationData.length - 1][0];
+
+			const ticks = niceTicks(minEle, maxEle, 5);
+			const yMin = ticks[0];
+			const yMax = ticks[ticks.length - 1];
+
+			const W = 1000, H = 300;
+			const padL = 56, padR = 12, padT = 14, padB = 10;
+			const chartW = W - padL - padR;
+			const chartH = H - padT - padB;
+
+			function xFor(distKm) { return padL + (distKm / totalDist) * chartW; }
+			function yFor(ele) { return padT + chartH - ((ele - yMin) / (yMax - yMin)) * chartH; }
+
+			let linePts = elevationData.map(p => `${xFor(p[0]).toFixed(1)},${yFor(p[1]).toFixed(1)}`).join(' ');
+			let areaPts = `${padL},${padT + chartH} ${linePts} ${xFor(totalDist).toFixed(1)},${padT + chartH}`;
+
+			let gridSvg = '';
+			ticks.forEach(t => {
+				const y = yFor(t).toFixed(1);
+				gridSvg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" class="ep-grid-line"/>`;
+				gridSvg += `<text x="${padL - 10}" y="${parseFloat(y) + 4}" class="ep-axis-label" text-anchor="end">${fmtNum(t)}</text>`;
+			});
+
+			container.innerHTML = `
+				<svg viewBox="0 0 ${W} ${H}" class="ep-svg" preserveAspectRatio="none" id="epSvg">
+					<defs>
+						<linearGradient id="epAreaFill" x1="0" y1="0" x2="0" y2="1">
+							<stop offset="0%" stop-color="#4f8ef7" stop-opacity="0.45"/>
+							<stop offset="100%" stop-color="#4f8ef7" stop-opacity="0.02"/>
+						</linearGradient>
+					</defs>
+					${gridSvg}
+					<polygon points="${areaPts}" fill="url(#epAreaFill)"/>
+					<polyline points="${linePts}" fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+					<g id="epMarker" style="display:none;">
+						<line x1="0" y1="${padT}" x2="0" y2="${padT + chartH}" class="ep-marker-line"/>
+						<circle cx="0" cy="0" r="4.5" class="ep-marker-dot"/>
+					</g>
+					<text x="${padL - 42}" y="${padT + chartH / 2}" class="ep-axis-title" text-anchor="middle" transform="rotate(-90 ${padL - 42} ${padT + chartH / 2})">Elevasi (m)</text>
+					<rect x="${padL}" y="${padT}" width="${chartW}" height="${chartH}" fill="transparent" id="epHitArea" style="cursor:crosshair;"/>
+				</svg>`;
+
+			const svg = container.querySelector('#epSvg');
+			const hitArea = container.querySelector('#epHitArea');
+			const marker = container.querySelector('#epMarker');
+			const markerLine = marker.querySelector('.ep-marker-line');
+			const markerDot = marker.querySelector('.ep-marker-dot');
+			const progressEl = document.getElementById('epProgress');
+			const altitudeEl = document.getElementById('epAltitude');
+
+			function pointForClientX(clientX) {
+				const rect = svg.getBoundingClientRect();
+				const fracX = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+				const svgX = fracX * W;
+				let idx = Math.round(((svgX - padL) / chartW) * (elevationData.length - 1));
+				idx = Math.min(Math.max(idx, 0), elevationData.length - 1);
+				return idx;
+			}
+
+			function updateAt(idx) {
+				const [dist, ele] = elevationData[idx];
+				const x = xFor(dist);
+				const y = yFor(ele);
+				marker.style.display = '';
+				markerLine.setAttribute('x1', x); markerLine.setAttribute('x2', x);
+				markerDot.setAttribute('cx', x); markerDot.setAttribute('cy', y);
+				progressEl.textContent = dist.toFixed(2) + ' km';
+				altitudeEl.textContent = Math.round(ele) + ' m';
+
+				if (latlngs && latlngs[idx]) {
+					if (!routeMarker) {
+						routeMarker = L.circleMarker(latlngs[idx], {
+							radius: 6, color: '#F1EDE3', weight: 2, fillColor: '#4f8ef7', fillOpacity: 1
+						}).addTo(map);
+					} else {
+						routeMarker.setLatLng(latlngs[idx]);
+					}
+				}
+			}
+
+			function reset() {
+				marker.style.display = 'none';
+				progressEl.textContent = '0 km';
+				altitudeEl.textContent = '0 m';
+				if (routeMarker) { map.removeLayer(routeMarker); routeMarker = null; }
+			}
+
+			hitArea.addEventListener('mousemove', (e) => updateAt(pointForClientX(e.clientX)));
+			hitArea.addEventListener('mouseleave', reset);
+			hitArea.addEventListener('touchmove', (e) => {
+				if (e.touches[0]) updateAt(pointForClientX(e.touches[0].clientX));
+			}, { passive: true });
+			hitArea.addEventListener('touchend', reset);
+
+			// expose so map click/hover can drive the same chart marker
+			epUpdateAt = updateAt;
+			epResetChart = reset;
+		}
+
+		function fillStatCards(gpx) {
+			const distKm = gpx.get_distance() / 1000;
+			document.getElementById('statDistance').innerHTML = distKm.toFixed(2) + '<span class="unit">km</span>';
+			document.getElementById('statGain').innerHTML = Math.round(gpx.get_elevation_gain()) + '<span class="unit">m</span>';
+			document.getElementById('statMax').innerHTML = Math.round(gpx.get_elevation_max()) + '<span class="unit">m</span>';
+			document.getElementById('statMin').innerHTML = Math.round(gpx.get_elevation_min()) + '<span class="unit">m</span>';
+		}
+
+		const gpx = new L.GPX(GPX_URL, {
+			async: true,
+			marker_options: {
+				startIconUrl: null,
+				endIconUrl: null,
+				shadowUrl: null,
+			},
+			polyline_options: {
+				color: '#4f8ef7',
+				weight: 4,
+				opacity: 0.9,
+			},
+		});
+
+		gpx.on('loaded', (e) => {
+			const layer = e.target;
+			map.fitBounds(layer.getBounds());
+			fillStatCards(layer);
+
+			// pull the raw track latlngs (for syncing a marker to chart hover)
+			let latlngs = [];
+			layer.eachLayer((l) => {
+				if (l instanceof L.Polyline && !(l instanceof L.Marker) && typeof l.getLatLngs === 'function') {
+					const pts = l.getLatLngs();
+					const flat = Array.isArray(pts[0]) ? pts.flat() : pts;
+					if (flat.length > latlngs.length) latlngs = flat;
+				}
+			});
+			trackLatLngs = latlngs;
+
+			const elevationData = layer.get_elevation_data(); // [[distKm, eleM], ...]
+			trackElevationData = elevationData;
+			const container = document.getElementById('epChart');
+			document.getElementById('epLoading')?.remove();
+			buildElevationChart(container, elevationData, latlngs);
+
+			// wide invisible line on top of the route, so clicking/hovering near
+			// the track (not just the exact pixel) still registers
+			if (latlngs.length > 1) {
+				const hitLine = L.polyline(latlngs, {
+					color: '#000',
+					weight: 18,
+					opacity: 0,
+					interactive: true,
+				}).addTo(map);
+				hitLine.on('mouseover', () => { map.getContainer().style.cursor = 'crosshair'; });
+				hitLine.on('mouseout', () => { map.getContainer().style.cursor = ''; if (epResetChart) epResetChart(); });
+				hitLine.on('mousemove', (ev) => {
+					if (epUpdateAt) epUpdateAt(nearestIndexForLatLng(ev.latlng));
+				});
+				hitLine.on('click', (ev) => {
+					if (epUpdateAt) epUpdateAt(nearestIndexForLatLng(ev.latlng));
+					document.querySelector('.elevation-panel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+				});
+			}
+		});
+
+		gpx.on('error', () => {
+			document.getElementById('epLoading').textContent = 'Gagal memuat data GPX.';
+		});
+
+		gpx.addTo(map);
+	</script>
 
 </body>
+
 </html>
