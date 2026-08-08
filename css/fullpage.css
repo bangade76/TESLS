@@ -1,23 +1,44 @@
+/* Pengaturan Dasar & Layout Container */
 html,
-body,
-.leaflet-map {
-    height: 100%;
-    width: 100%;
-    padding: 0px;
-    margin: 0px;
-}
-
 body {
-    display: flex;
-    flex-direction: column;
+    height: 100%;
+    width: 100%;[cite: 1]
+    padding: 0px;[cite: 1]
+    margin: 0px;[cite: 1]
+    display: flex;[cite: 1]
+    flex-direction: column;[cite: 1]
+    /* Menggunakan sistem font default yang bersih ala GitHub */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background-color: #ffffff;
 }
 
+/* Area Peta Utama */
+.leaflet-map {
+    /* 
+       Tinggi diubah dari 100%[cite: 1] menjadi 65vh (65% dari tinggi layar).
+       Ini menyisakan 35% ruang di bawahnya untuk grafik elevasi.
+    */
+    height: 65vh; 
+    width: 100%;[cite: 1]
+    padding: 0px;[cite: 1]
+    margin: 0px;[cite: 1]
+    /* Menambahkan garis batas bawah berwarna abu-abu khas batas elemen GitHub */
+    border-bottom: 1px solid #d0d7de; 
+}
+
+/* Area Ringkasan/Grafik Elevasi */
 .elevation-summary {
-    margin: 0px;
-   }
-
-.leaflet-control-attribution {
-    display: none;
+    margin: 0px;[cite: 1]
+    /* flex-grow: 1 memastikan kontainer ini otomatis mengisi semua sisa ruang di bawah peta */
+    flex-grow: 1; 
+    padding: 20px;
+    /* Latar belakang abu-abu terang agar kontras dengan peta (gaya UI GitHub) */
+    background-color: #f6f8fa; 
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
-
+/* Menyembunyikan Atribusi Bawaan Peta */
+.leaflet-control-attribution {
+    display: none;[cite: 1]
+}
