@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>LINTASENTUL 25K</title>
+  <title>LINTASENTUL 5K</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
   <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
@@ -26,11 +26,7 @@
 
 <body>
 
-  <!-- Container Peta -->
   <div id="map" class="leaflet-map"></div>
-  
-  <!-- Container Grafik Elevasi -->
-  <div id="elevation" class="elevation-summary"></div>
 
   <script>
     let opts = {
@@ -53,16 +49,16 @@
         },
       },
       elevationControl: {
-        url: "LS2027/25K_LS.gpx",  // GPX lokal
+        url: "LS2027/5K_LS.gpx",  // GPX lokal
         options: {
-          elevationDiv: "#elevation", // Menghubungkan grafik ke div bawah peta
           theme: "lightblue-theme",
-          height: 200, // Menyesuaikan tinggi grafik agar proporsional
+          width: 100,
+          height: 150,
           collapsed: false,
           autohide: false,
           autofitBounds: true,
           position: "bottomleft",
-          detached: true, // Memastikan grafik terlepas dari overlay peta
+          detached: true,
           summary: false,
           imperial: false,
           downloadLink: false,
