@@ -1,168 +1,188 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
-  <title>LINTASENTUL 25K</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
-  <link rel="dns-prefetch preconnect" href="https://unpkg.com" />
-  <link rel="preload" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" as="script">
-  <link rel="preload" href="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js" as="script">
+    <meta charset="UTF-8">
+    <title>LINTASENTUL 25K</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    
+    <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
+    <link rel="dns-prefetch preconnect" href="https://unpkg.com" />
+    <link rel="preload" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" as="script">
+    <link rel="preload" href="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js" as="script">
 
-  <!-- Pastikan file css/fullpage.css sudah menggunakan pengaturan Flexbox (height 65vh) yang kita bahas sebelumnya -->
-  <style>@import 'css/fullpage.css';</style>
+    <!-- Pastikan file css/fullpage.css sudah menggunakan pengaturan Flexbox (height 65vh) -->
+    <style>@import 'css/fullpage.css';</style>
 
-  <!-- leaflet-ui -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js"></script>
+    <!-- leaflet-ui -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-ui@0.6.0/dist/leaflet-ui.js"></script>
 
-  <!-- leaflet-gpx -->
-  <script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
+    <!-- leaflet-gpx -->
+    <script src="https://unpkg.com/leaflet-gpx@1.7.0/gpx.js"></script>
 
-  <!-- leaflet-elevation -->
-  <link rel="stylesheet" href="https://unpkg.com/@raruto/leaflet-elevation@2.5.1/dist/leaflet-elevation.min.css" />
-  <script src="https://unpkg.com/@raruto/leaflet-elevation@2.5.1/dist/leaflet-elevation.min.js"></script>
+    <!-- leaflet-elevation -->
+    <link rel="stylesheet" href="https://unpkg.com/@raruto/leaflet-elevation@2.5.1/dist/leaflet-elevation.min.css" />
+    <script src="https://unpkg.com/@raruto/leaflet-elevation@2.5.1/dist/leaflet-elevation.min.js"></script>
 </head>
 
 <body>
 
-  <!-- 1. Container Peta Utama -->
-  <div id="map" class="leaflet-map"></div>
-  
-<!-- BINGKAI ELEVASI TEMA GELAP -->
-<div class="elevation-dark-card">
-  
-  <!-- Bagian Header (Judul & Kotak Stats) -->
-  <div class="elevation-header">
-    <div class="header-title">
-      <h2>ELEVATION PROFILE</h2>
-      <p>LIVE TERRAIN DATA</p>
-    </div>
+    <!-- 1. Container Peta Utama -->
+    <div id="map" class="leaflet-map" style="height: 60vh; width: 100%;"></div>
     
-    <div class="header-live-stats">
-      <div class="stat-item">
-        <span class="stat-label">PROGRESS</span>
-        <span class="stat-value text-green">0 <small>km</small></span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-label">ALTITUDE</span>
-        <span class="stat-value text-white">0 <small>m</small></span>
-      </div>
+    <!-- 2. BINGKAI ELEVASI TEMA GELAP -->
+    <div class="elevation-dark-card">
+        
+        <!-- Bagian Header (Judul & Kotak Stats) -->
+        <div class="elevation-header">
+            <div class="header-title">
+                <h2>ELEVATION PROFILE</h2>
+                <p>LIVE TERRAIN DATA</p>
+            </div>
+            
+            <div class="header-live-stats">
+                <div class="stat-item">
+                    <span class="stat-label">PROGRESS</span>
+                    <!-- Tambahkan ID live-progress agar bisa diubah via JS -->
+                    <span class="stat-value text-green" id="live-progress">0.0 <small>km</small></span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-label">ALTITUDE</span>
+                    <!-- Tambahkan ID live-altitude agar bisa diubah via JS -->
+                    <span class="stat-value text-white" id="live-altitude">0 <small>m</small></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container untuk render grafik leaflet-elevation -->
+        <div id="elevation" class="elevation-chart-area"></div>
+
     </div>
-  </div>
 
-  <!-- Container untuk render grafik leaflet-elevation -->
-  <div id="elevation" class="elevation-chart-area"></div>
+    <!-- SCRIPT KONFIGURASI PETA & ELEVASI -->
+    <script>
+        let opts = {
+            map: {
+                center: [-7.4541485122895015, 110.43695296633011],
+                zoom: 10,
+                fullscreenControl: true,
+                layersControl: true,
+                minimapControl: false,
+                searchControl: false,
+                locateControl: false,
+                pegmanControl: false,
+                resizerControl: false,
+                gestureHandling: false,
+                preferCanvas: true,
+                mapTypeId: 'topo',
+                rotate: false,
+                zoomControl: {
+                    position: 'topleft',
+                },
+            },
+            elevationControl: {
+                url: "LS2027/25K_LS.gpx",  
+                options: {
+                    elevationDiv: "#elevation", 
+                    theme: "lime-theme",        // Tema warna hijau ala outdoor/olahraga
+                    height: 200,                
+                    collapsed: false,
+                    autohide: false,
+                    autofitBounds: true,
+                    position: "bottomleft",
+                    detached: true,
+                    summary: false,             // <-- DIUBAH KE FALSE: Agar statistik bawaan plugin disembunyikan dan hanya memakai desain kustom kita
+                    imperial: false,            // Gunakan metrik (Kilometer/Meter)
+                    downloadLink: false,
+                    slope: "disabled",
+                    speed: false,
+                    acceleration: false,
+                    time: false,
+                    legend: true,
+                    followMarker: true,
+                    almostOver: true,
+                    distanceMarkers: true,      // Aktifkan penanda jarak (1km, 2km, dst) di rute peta
+                    hotline: true,              // Aktifkan hotline agar warna jalur berubah mengikuti elevasi
+                },
+            },
+            layersControl: {
+                options: {
+                    collapsed: false,
+                },
+            },
+        };
 
-</div>
+        let map = L.map('map', opts.map);
+        let controlElevation = L.control.elevation(opts.elevationControl.options).addTo(map);
+        let controlLayer = L.control.layers(null, null, opts.layersControl.options);
 
-  <script>
-    let opts = {
-      map: {
-        center: [-7.4541485122895015, 110.43695296633011],
-        zoom: 10,
-        fullscreenControl: true,
-        layersControl: true,
-        minimapControl: false,
-        searchControl: false,
-        locateControl: false,
-        pegmanControl: false,
-        resizerControl: false,
-        gestureHandling: false,
-        preferCanvas: true,
-        mapTypeId: 'topo',
-        rotate: false,
-        zoomControl: {
-          position: 'topleft',
-        },
-      },
-elevationControl: {
-        url: "LS2027/25K_LS.gpx",  
-        options: {
-          elevationDiv: "#elevation", 
-          theme: "lime-theme",        // <-- UBAH: Tema warna hijau ala outdoor/olahraga
-          height: 200,                
-          collapsed: false,
-          autohide: false,
-          autofitBounds: true,
-          position: "bottomleft",
-          detached: true,
-          summary: 'inline',          // <-- PASTIKAN INI inline: Untuk memunculkan teks statistik
-          imperial: false,            // Gunakan metrik (Kilometer/Meter)
-          downloadLink: false,
-          slope: "disabled",
-          speed: false,
-          acceleration: false,
-          time: false,
-          legend: true,
-          followMarker: true,
-          almostOver: true,
-          distanceMarkers: true,      // <-- UBAH: Aktifkan penanda jarak (1km, 2km, dst) di rute peta
-          hotline: true,              // <-- UBAH: Aktifkan hotline agar warna jalur berubah mengikuti elevasi
-        },
-      },
-      layersControl: {
-        options: {
-          collapsed: false,
-        },
-      },
-    };
+        // Event saat data GPX berhasil dimuat
+        controlElevation.on('eledata_loaded', ({layer, name}) => {
+            controlLayer.addTo(map);
+            layer.eachLayer((trkseg) => {
+                if (trkseg.feature.geometry.type != "Point") {
+                    controlLayer.addOverlay(trkseg, trkseg.feature?.properties?.name || name);
+                }
+            });
+        });
 
-    let map = L.map('map', opts.map);
+        // ==========================================
+        // FITUR UPDATE ANGKA "LIVE TERRAIN" SAAT HOVER
+        // ==========================================
+        map.on('elechart_change', function(e) {
+            if (e && e.data) {
+                // Ambil data dari titik kursor (distance & altitude)
+                let currentDist = parseFloat(e.data.dist || e.data.x || 0).toFixed(2);
+                let currentAlt = Math.round(e.data.alt || e.data.y || e.data.z || 0);
 
-    let controlElevation = L.control.elevation(opts.elevationControl.options).addTo(map);
-    let controlLayer = L.control.layers(null, null, opts.layersControl.options);
+                // Update teks di dalam kotak stat
+                document.getElementById('live-progress').innerHTML = currentDist + ' <small>km</small>';
+                document.getElementById('live-altitude').innerHTML = currentAlt + ' <small>m</small>';
+            }
+        });
 
-    controlElevation.on('eledata_loaded', ({layer, name}) => {
-      controlLayer.addTo(map);
-      layer.eachLayer((trkseg) => {
-        if (trkseg.feature.geometry.type != "Point") {
-          controlLayer.addOverlay(trkseg, trkseg.feature?.properties?.name || name);
-        }
-      });
-    });
+        // Load data GPX
+        controlElevation.load(opts.elevationControl.url);
+    </script>
 
-    controlElevation.load(opts.elevationControl.url);
-  </script>
+    <!-- SCRIPT CUSTOM LOCALE (Terjemahan label plugin) -->
+    <script>
+        L.registerLocale('en:18', {
+            "Acceleration": "Acceleration",
+            "Altitude": "Elevation",
+            "Slope": "Slope",
+            "Speed": "Velocity",
+            "Total Length: ": "L: ",
+            "Max Elevation: ": "E Max: ",
+            "Min Elevation: ": "E Min: ",
+            "Avg Elevation: ": "E Avg: ",
+            "Total Time: ": "T: ",
+            "Total Ascent: ": "Asc: ",
+            "Total Descent: ": "Desc: ",
+            "Min Slope: ": "S Min: ",
+            "Max Slope: ": "S Max: ",
+            "Avg Slope: ": "S Avg: ",
+            "Min Speed: ": "V Min: ",
+            "Max Speed: ": "V Max: ",
+            "Avg Speed: ": "V Avg: ",
+            "Min Acceleration: ": "A Min: ",
+            "Max Acceleration: ": "A Max: ",
+            "Avg Acceleration: ": "A Avg: ",
+        });
 
-  <script>
-    L.registerLocale('en:18', {
-      "Acceleration": "Acceleration",
-      "Altitude": "Elevation",
-      "Slope": "Slope",
-      "Speed": "Velocity",
-      "Total Length: ": "L: ",
-      "Max Elevation: ": "E Max: ",
-      "Min Elevation: ": "E Min: ",
-      "Avg Elevation: ": "E Avg: ",
-      "Total Time: ": "T: ",
-      "Total Ascent: ": "Asc: ",
-      "Total Descent: ": "Desc: ",
-      "Min Slope: ": "S Min: ",
-      "Max Slope: ": "S Max: ",
-      "Avg Slope: ": "S Avg: ",
-      "Min Speed: ": "V Min: ",
-      "Max Speed: ": "V Max: ",
-      "Avg Speed: ": "V Avg: ",
-      "Min Acceleration: ": "A Min: ",
-      "Max Acceleration: ": "A Max: ",
-      "Avg Acceleration: ": "A Avg: ",
-    });
+        L.locales['en'] = L.extend({
+            "y: ": "",
+            "x: ": "",
+            "t: ": "",
+            "T: ": "",
+            "m: ": "",
+            "v: ": "",
+            "a: ": "",
+        }, L.locales['en']);
 
-    L.locales['en'] = L.extend({
-      "y: ": "",
-      "x: ": "",
-      "t: ": "",
-      "T: ": "",
-      "m: ": "",
-      "v: ": "",
-      "a: ": "",
-    }, L.locales['en']);
-
-    L.setLocale('en');
-  </script>
+        L.setLocale('en');
+    </script>
 
 </body>
 </html>
