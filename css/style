@@ -1,0 +1,11 @@
+/* Efek Transisi untuk Interaktivitas Angka */
+.stat-value {
+    transition: all 0.2s ease-out; /* Transisi halus */
+}
+
+/* Class yang akan ditambahkan via JS saat grafik disentuh (hover) */
+.stat-value.is-active {
+    color: #3b82f6 !important; /* Berubah jadi biru menyala */
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.6); /* Efek Glow */
+    transform: scale(1.05); /* Membesar sedikit */
+}
