@@ -30,8 +30,33 @@
   <!-- 1. Container Peta Utama -->
   <div id="map" class="leaflet-map"></div>
   
-  <!-- 2. Container Grafik Elevasi (BARU) -->
-  <div id="elevation" class="elevation-summary"></div>
+<!-- BINGKAI ELEVASI TEMA GELAP -->
+<div class="elevation-dark-card">
+  
+  <!-- Bagian Header (Judul & Kotak Stats) -->
+  <div class="elevation-header">
+    <div class="header-title">
+      <h2>ELEVATION PROFILE</h2>
+      <p>LIVE TERRAIN DATA</p>
+    </div>
+    
+    <div class="header-live-stats">
+      <div class="stat-item">
+        <span class="stat-label">PROGRESS</span>
+        <span class="stat-value text-green">0 <small>km</small></span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-label">ALTITUDE</span>
+        <span class="stat-value text-white">0 <small>m</small></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container untuk render grafik leaflet-elevation -->
+  <div id="elevation" class="elevation-chart-area"></div>
+
+</div>
 
   <script>
     let opts = {
