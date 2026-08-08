@@ -388,6 +388,73 @@
 
         // Load data GPX
         controlElevation.load(opts.elevationControl.url);
-    </script>
+<script>
+    let opts = {
+        map: {
+            center: [-7.4541485122895015, 110.43695296633011],
+            zoom: 10,
+            fullscreenControl: true,
+            layersControl: true,
+            minimapControl: false,
+            preferCanvas: true,
+            mapTypeId: 'topo',
+            zoomControl: { position: 'topleft' },
+        },
+        elevationControl: {
+            url: "LS2027/25K_LS.gpx",  
+            options: {
+                elevationDiv: "#elevation", 
+                theme: "lime-theme",
+                height: 200,                
+                autofitBounds: true,
+                position: "bottomleft",
+                detached: true,
+                summary: false, 
+                imperial: false,
+                distanceMarkers: true,
+                hotline: true,
+            },
+        }
+    };
+
+    let map = L.map('map', opts.map);
+    let controlElevation = L.control.elevation(opts.elevationControl.options).addTo(map);
+
+    // Ambil elemen HTML-nya
+    const progressEl = document.getElementById('live-progress');
+    const altitudeEl = document.getElementById('live-altitude');
+    const chartArea = document.getElementById('elevation');
+
+    // 1. EVENT: Saat kursor bergerak di atas grafik (HOVER)
+    map.on('elechart_change', function(e) {
+        if (e && e.data) {
+            // Ambil jarak (km) dan ketinggian (m)
+            let currentDist = parseFloat(e.data.dist || 0).toFixed(2);
+            let currentAlt = Math.round(e.data.alt || 0);
+
+            // Update Teks Angka
+            progressEl.innerHTML = currentDist + ' <small>km</small>';
+            altitudeEl.innerHTML = currentAlt + ' <small>m</small>';
+
+            // Tambahkan class animasi "is-active" (Biru & Glow)
+            progressEl.classList.add('is-active');
+            altitudeEl.classList.add('is-active');
+        }
+    });
+
+    // 2. EVENT: Saat kursor KELUAR dari grafik (MOUSE LEAVE)
+    chartArea.addEventListener('mouseleave', function() {
+        // Kembalikan ke angka 0.00
+        progressEl.innerHTML = '0.00 <small>km</small>';
+        altitudeEl.innerHTML = '0 <small>m</small>';
+
+        // Hilangkan efek animasi
+        progressEl.classList.remove('is-active');
+        altitudeEl.classList.remove('is-active');
+    });
+
+    // Load data GPX
+    controlElevation.load(opts.elevationControl.url);
+</script>
 </body>
 </html>
